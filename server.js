@@ -364,9 +364,12 @@ function useAbility(room, p, type, now) {
       const COOLDOWN = 6000;
       if (now < cd.dash) return;
       cd.dash = now + COOLDOWN;
+      // trail effect
+      const before = { x: p.x, y: p.y };
       p.dashingUntil = now + 240;
       p.iFramesUntil = now + 360;
       p.x += p.dirX * 60; p.y += p.dirY * 60;
+      room.effects.push({ id: uuidv4(), type: 'dash', x1: before.x, y1: before.y, x2: p.x, y2: p.y, until: now + 220 });
       break;
     }
     case 'grenade': {
