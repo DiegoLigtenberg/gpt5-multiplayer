@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Multiplayer Monsters</title>
+    <style>
+      :root { --bg:#0b0e14; --panel:#121826; --accent:#6cb2ff; --muted:#8aa; --grid:#1a2230; --outline:#0006; }
+      html, body { height: 100%; margin: 0; background: var(--bg); color: #eef; font-family: system-ui, sans-serif; }
+      canvas { display: block; width: 100vw; height: 100vh; }
+      #ui { position: fixed; top: 8px; left: 8px; background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 8px; font-size: 14px; }
+
+      /* Menu */
+      #menu {
+        position: fixed; inset: 0; display: grid; place-items: center; background: radial-gradient(1200px 800px at 50% 40%, #0f1524, transparent 70%);
+      }
+      .card {
+        width: min(560px, 92vw); background: var(--panel); border-radius: 14px; box-shadow: 0 8px 40px #0008; padding: 20px 22px;
+        border: 1px solid #1c2336;
+      }
+      .title { font-size: 26px; font-weight: 800; letter-spacing: 0.3px; }
+      .subtitle { color: var(--muted); margin-top: 6px; margin-bottom: 18px; }
+      .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+      .group { background: #0f1524; border: 1px solid #1c2336; padding: 10px; border-radius: 10px; flex: 1; min-width: 180px; }
+      .label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+      .options { display: flex; gap: 8px; flex-wrap: wrap; }
+      .btn { appearance: none; border: 1px solid #29324a; color: #e8f0ff; background: #121c31; padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: 120ms ease; }
+      .btn:hover { transform: translateY(-1px); border-color: #3a4666; }
+      .btn.active { background: #1a2947; border-color: var(--accent); box-shadow: 0 0 0 2px #6cb2ff33 inset; }
+      .playbar { display:flex; justify-content: space-between; align-items:center; margin-top: 16px; }
+      .play { background: linear-gradient(180deg, #2f79ff, #1b56c9); border: 1px solid #2b5dd4; padding: 10px 16px; border-radius: 12px; font-weight: 700; }
+      .hint { color: var(--muted); font-size: 12px; }
+
+      /* Audio control */
+      #audioToggle { cursor: pointer; color: var(--muted); }
+      #audioToggle.active { color: #bde; }
+    </style>
+  </head>
+  <body>
+    <div id="menu">
+      <div class="card">
+        <div class="title">Monsters Arena</div>
+        <div class="subtitle">Top-down co-op. Choose players and difficulty, then play locally in one browser with 1–4 players (open more tabs for more players).</div>
+
+        <div class="row">
+          <div class="group">
+            <div class="label">Players</div>
+            <div class="options" id="optPlayers"></div>
+          </div>
+          <div class="group">
+            <div class="label">Difficulty</div>
+            <div class="options" id="optDiff"></div>
+          </div>
+        </div>
+
+        <div class="playbar">
+          <div class="hint">Controls: WASD or Arrows to move, Mouse to aim, Click to shoot</div>
+          <button id="btnPlay" class="btn play">Play</button>
+        </div>
+
+        <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+          <span id="audioToggle" class="btn">Music: Off</span>
+          <span class="hint">Put your music files under <code>public/audio/menu/</code> and <code>public/audio/game/</code></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="ui" style="display:none;">WASD to move, mouse to aim, click to shoot</div>
+    <canvas id="game"></canvas>
+
+    <!-- Audio elements: we will dynamically pick a file if present -->
+    <audio id="bgmMenu" loop></audio>
+    <audio id="bgmGame" loop></audio>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+  </body>
+</html> 
